@@ -1,0 +1,65 @@
+gallery:
+  security:
+    open-endpoints:
+      - /api/users/register
+      - /api/users/id/*
+      - /api/users/username/*
+    protected-services:
+      authentication-service-url: ${AUTHENTICATION_SERVICE_URL:http://auth-service:8080}
+
+spring:
+  application:
+    name: User-Service
+
+  datasource:
+    url: ${USERS_DB_URL:jdbc:postgresql://postgres-users:5432/users_db}
+    username: ${USERS_DB_USER:testUser}
+    password: ${USERS_DB_PASSWORD:testUser}
+    hikari:
+      connection-timeout: 5000
+      max-lifetime: 500000
+      maximum-pool-size: 10
+
+  liquibase:
+    enabled: true
+
+  data:
+    jdbc:
+      dialect: postgresql
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+  web:
+    resources:
+      add-mappings: false
+
+---
+#Configuration for dev profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/users_db
+gallery:
+  security:
+    protected-services:
+      authentication-service-url: http://localhost:8080
+server:
+  port: 8081
+
+---
+#Configuration for smoke test run
+spring:
+  config:
+    activate:
+      on-profile: smoke
+  liquibase:
+    enabled: false
+  sql:
+    init:
+      mode: never
+  datasource:
+    hikari:
+      allow-pool-suspension: true
