@@ -1,3 +1,6 @@
+app:
+  version: @project.version@
+
 gallery:
   security:
     open-endpoints:
@@ -34,6 +37,31 @@ spring:
     resources:
       add-mappings: false
 
+springdoc:
+  api-docs:
+    enabled: false
+
+---
+#Configuration for openapi
+spring:
+  config:
+    activate:
+      on-profile: dev, smoke
+gallery:
+  security:
+    open-endpoints:
+      - /api/users/v3/*
+      - /api/users/register
+      - /api/users/id/*
+      - /api/users/username/*
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/users/v3/api-docs
+  writer-with-default-pretty-printer: true
+  model-converters:
+    pageable-converter:
+      enabled: true
 ---
 #Configuration for dev profile
 spring:
