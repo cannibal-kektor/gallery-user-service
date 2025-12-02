@@ -54,10 +54,10 @@ spring:
 gallery:
   security:
     open-endpoints:
-      - /api/users/v3/*
-      - /api/users/register
-      - /api/users/id/*
-      - /api/users/username/*
+      - path: /api/users/v3/*
+        method.name: GET
+      - path: /api/users/register
+        method.name: POST
 springdoc:
   api-docs:
     enabled: true
