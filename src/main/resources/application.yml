@@ -4,9 +4,13 @@ app:
 gallery:
   security:
     open-endpoints:
-      - /api/users/register
-      - /api/users/id/*
-      - /api/users/username/*
+      - path: /api/users/register
+        method.name: POST
+    internal-endpoints:
+      - path: /api/users/id/*
+        method.name: GET
+      - path: /api/users/username/*
+        method.name: GET
     protected-services:
       authentication-service-url: ${AUTHENTICATION_SERVICE_URL:http://auth-service:8080}
 
