@@ -2,6 +2,7 @@ package kektor.innowise.gallery.users.controller;
 
 import jakarta.validation.Valid;
 import kektor.innowise.gallery.security.UserPrincipal;
+import kektor.innowise.gallery.users.controller.openapi.UserServiceOpenApi;
 import kektor.innowise.gallery.users.dto.RegistrationRequest;
 import kektor.innowise.gallery.users.dto.UserDto;
 import kektor.innowise.gallery.users.service.UserService;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserServiceOpenApi {
 
     final UserService userService;
 
@@ -30,6 +31,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Override
     public ResponseEntity<UserDto> register(@RequestBody @Valid RegistrationRequest registrationRequest) {
         return ResponseEntity.ok()
                 .body(userService.register(registrationRequest));
@@ -39,7 +41,8 @@ public class UserController {
             path = "/id/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<UserDto> get(@PathVariable Long id) {
+    @Override
+    public ResponseEntity<UserDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok()
                 .body(userService.get(id));
     }
@@ -48,7 +51,8 @@ public class UserController {
             path = "/username/{username}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<UserDto> get(@PathVariable String username) {
+    @Override
+    public ResponseEntity<UserDto> getByUsername(@PathVariable String username) {
         UserDto user = userService.get(username);
         return ResponseEntity.ok(user);
     }
@@ -57,6 +61,7 @@ public class UserController {
             path = "/current",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Override
     public ResponseEntity<UserDto> getCurrent(@AuthenticationPrincipal UserPrincipal principal) {
         UserDto user = userService.get(principal.username());
         return ResponseEntity.ok(user);
